@@ -7,12 +7,13 @@
 #include <assert.h>
 #include <math.h>
 
-#define SPEC "%u"
-typedef unsigned char elem_t;
+#include "library_of_defines.h"
 
-const int MAX_WORD_SIZE          = 25;
-const int MAX_LIBRARY_SIZE       = pow (2, 2 * 8);
-const int MAX_ONE_BYTE_WORDS_NUM = 128;
+const int     MAX_WORD_SIZE          = 35;     // max size of each library word
+const int     MAX_LIBRARY_SIZE       = 32767;  // 2^16 / 2
+const int     MAX_ONE_BYTE_WORDS_NUM = 128;    // max number of 1 byte words
+unsigned char MASK                   = 128;    // byte mask
+unsigned char ONE_BYTE_WORD          = 0;      // 'word' which has a size 1 byte
 
 enum RESULT
 {
@@ -57,6 +58,9 @@ size_t file_size_measure (FILE* const file_p);
 
 int compress_data (char* string, unsigned char** buffer, size_t* buffer_size, struct Library* library);
 
-int compressed_data_output (FILE* result_file, unsigned char* buffer, size_t buffer_size);
+int decode_data (FILE* sourse_file, struct Library* library, unsigned char** buffer, size_t* buffer_size);
+
+int decoded_data_output (FILE* result_file, unsigned char* buffer, size_t buffer_size);
+
 
 #endif // DATA_COMPRESSION_H_INCLUDED
