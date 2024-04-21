@@ -25,31 +25,17 @@ enum RESULT
     NULL_PTR      =  4
 };
 
-enum Elem_t
-{
-    one_byte = 1,
-    two_byte = 2,
-};
-
-union Word_type_num
-{
-    unsigned char  one_byte_num;
-    unsigned short two_byte_num;
-};
-
 struct Library_word
 {
-    char                name[MAX_WORD_SIZE];
-    union Word_type_num word_num;
-    Elem_t              type;
+    char           name[MAX_WORD_SIZE];
+    unsigned short word_num;
 };
 
 struct Library
 {
-    struct Library_word*        lib_words;
-    //struct Library_word_short* lib_words_short;
-    size_t                      size;
-    size_t                      capacity;
+    struct Library_word* lib_words;
+    size_t               size;
+    size_t               capacity;
 };
 
 int read_library_file (FILE* library_file, struct Library* library);
