@@ -87,7 +87,7 @@ int read_library_file (FILE* library_file, struct Library* library)
     size_t factual_size = fread (text_data, sizeof (char), file_size, library_file);
 
     size_t ptr = 0;
-    char* sep = "|\n";
+    const char* sep = "|\n";
 
     char* word = strtok (text_data, sep);
     while (word != NULL)
@@ -97,13 +97,18 @@ int read_library_file (FILE* library_file, struct Library* library)
             library->capacity *= 2;
             REALLOC (library->lib_words, struct Library_word, library->capacity);
         }
-        memcpy (library->lib_words[library->size].name, word, strlen (word) * sizeof (char));
-        library->lib_words[library->size].type = one_byte;
-        library->lib_words[library->size].word_num.one_byte_num = library->size;
+        memcpy (library->lib_words[library->size].name, word, strlen (word));
+        //library->lib_words[library->size].type = one_byte;
+        library->lib_words[library->size].word_num = library->size;
         library->size += 1;
 
         word = strtok (NULL, sep);
     }
+    word = "\n";
+    memcpy (library->lib_words[library->size].name, word, strlen (word));
+    //library->lib_words[library->size].type = one_byte;
+    library->lib_words[library->size].word_num = library->size;
+    library->size += 1;
     print_library (library);
 
     free (text_data);
@@ -119,7 +124,7 @@ int decode_data (FILE* sourse_file, struct Library* library, unsigned char** buf
 
     char* text_data = NULL;
     size_t file_size = file_size_measure (sourse_file);            // measures the size of a text
-    printf ("size of file: %d\n", file_size);
+    //printf ("size of file: %d\n", file_size);
     CALLOC (text_data, char, file_size + 1);
     size_t factual_size = fread (text_data, sizeof (char), file_size, sourse_file);
 
@@ -141,29 +146,26 @@ int decode_data (FILE* sourse_file, struct Library* library, unsigned char** buf
         {
             //printf ("1\n");
             num = text_data[ptr];
-            printf ("num = %u.\n", num);
-            //j = ptr;
+            //printf ("num = %u.\n", num);
             ptr++;
         }
         else
         {
-
             unsigned short mask = 32896;
-            //printf ("2\n");
+
             num = *((unsigned short*) (text_data + ptr));
-            printf ("before num = %u\n", num);
+            //printf ("before num = %u\n", num);
             unsigned short res = num & mask;
             if (res == mask)
                 num = num ^ mask;
 
-            printf ("num = %u\n", num);
-            //j = ptr;
+            //printf ("num = %u\n", num);
             ptr += 2;
         }
-        printf ("lb size = %d\n", library->size);
+        //printf ("lb size = %d\n", library->size);
         if (num <= library->size)
         {
-            printf ("- %s\n", library->lib_words[num].name);
+            //printf ("- %s\n", library->lib_words[num].name);
             strcat ((char*) *buffer, library->lib_words[num].name);
             *buffer_size += strlen (library->lib_words[num].name);
         }
@@ -186,23 +188,20 @@ int decode_data (FILE* sourse_file, struct Library* library, unsigned char** buf
         else
         {
             unsigned short mask = 32896;
-            //printf ("2\n");
             num = *((unsigned short*) (text_data + ptr));
-            printf ("before num = %u\n", num);
+            //printf ("before num = %u\n", num);
             unsigned short res = num & mask;
             if (res == mask)
                 num = num ^ mask;
 
-            printf ("num = %u\n", num);
+            //printf ("num = %u\n", num);
         }
         memcpy (next_word, library->lib_words[num].name, strlen (library->lib_words[num].name));
         new_library_word[n] = next_word[j];
         while (flag == 1 && ptr < factual_size)
         {
             word[n++] = next_word[j];
-            //new_library_word[n++] = next_word[j];
-            //strcat (word, library->lib_words[num].name
-            printf ("[%s]\n", word);
+            //printf ("[%s]\n", word);
             for (int i = 0; i < library->size; i++)
             {
                 flag = 0;
@@ -210,7 +209,7 @@ int decode_data (FILE* sourse_file, struct Library* library, unsigned char** buf
                 {
 
                     new_library_word[n] = next_word[++j];
-                    printf ("<<%s>>\n", new_library_word);
+                    //printf ("<<%s>>\n", new_library_word);
                     flag = 1;
                     break;
                 }
@@ -221,20 +220,11 @@ int decode_data (FILE* sourse_file, struct Library* library, unsigned char** buf
             library->capacity *= 2;
             REALLOC (library->lib_words, struct Library_word, library->capacity);
         }
-
-        memcpy (library->lib_words[library->size].name, new_library_word, strlen (new_library_word) * sizeof (char));   // add new word in library
-        if (library->size < MAX_ONE_BYTE_WORDS_NUM)
-        {
-            library->lib_words[library->size].word_num.one_byte_num = library->size;
-            library->lib_words[library->size].type = one_byte;
-        }
-        else
-        {
-            library->lib_words[library->size].word_num.two_byte_num = library->size;
-            library->lib_words[library->size].type = two_byte;
-        }
+        memcpy (library->lib_words[library->size].name, new_library_word, strlen (new_library_word));   // add new word in library
+        library->lib_words[library->size].word_num = library->size;
         library->size += 1;
     }
+
     free (text_data);
 
     return SUCCESS;
@@ -273,6 +263,7 @@ void print_library (struct Library* library)
     printf ("----------------- Library -----------------\n\n");
     for (int i = 0; i < library->size; i++)
         printf ("[%s]", library->lib_words[i].name);
+
     printf ("\n");
     printf ("size of library = %d\n\n", library->size);
     printf ("-------------------------------------------\n");
