@@ -9,7 +9,7 @@ FLAGS = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equa
 	-Wwrite-strings -D_DEBUG -D_EJUDGE_CLIENT_SIDE
 
 all: data_compression
-	data_compression.exe text_files\library.txt text_files\file_result.txt
+	data_compression.exe text_files\library.txt text_files\file_sourse.txt text_files\file_result.txt
 
 data_compression.o: src\data_compression.cpp
 	$(CC) -c src\data_compression.cpp $(FLAGS)
