@@ -38,15 +38,22 @@ struct Library
     size_t               capacity;
 };
 
+struct Buffer
+{
+    unsigned char* data;
+    size_t         size;
+    size_t         capacity;
+};
+
 int read_library_file (FILE* library_file, struct Library* library);
 
 size_t file_size_measure (FILE* const file_p);
 
-int compress_data (char* string, unsigned char** buffer, size_t* buffer_size, struct Library* library);
+int compress_data (char* string, struct Buffer* buffer, struct Library* library);
 
-int decode_data (FILE* sourse_file, struct Library* library, unsigned char** buffer, size_t* buffer_size);
+int decode_data (FILE* sourse_file, struct Library* library, struct Buffer* buffer);
 
-int decoded_data_output (FILE* result_file, unsigned char* buffer, size_t buffer_size);
+int decoded_data_output (FILE* result_file, struct Buffer* buffer);
 
 
 #endif // DATA_COMPRESSION_H_INCLUDED
