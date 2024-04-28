@@ -8,17 +8,23 @@ FLAGS = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equa
 	-Wstack-usage=8192 -Wstrict-aliasing -Wstrict-null-sentinel -Wtype-limits\
 	-Wwrite-strings -D_DEBUG -D_EJUDGE_CLIENT_SIDE
 
-all: data_compression
-	data_compression.exe text_files\library.txt text_files\file_sourse.txt text_files\file_result.txt
+library      = text_files\library.txt
+sourse_file  = text_files\text_1.txt
+encoded_file = text_files\file_encoded_1.txt
+decoded_file = text_files\file_decoded_1.txt
+
+compress: data_compression
+	data_compression.exe $(library) $(sourse_file) $(encoded_file)
 
 data_compression.o: src\data_compression.cpp
-	$(CC) -c src\data_compression.cpp $(FLAGS)
+	$(CC) -c src\data_compression.cpp
 
 data_compression: data_compression.o
 	$(CC) -o data_compression data_compression.o
 
+
 decoder: data_decoder
-	data_decoder.exe text_files\library.txt text_files\file_result.txt text_files\file_decoded.txt
+	data_decoder.exe $(library) $(encoded_file) $(decoded_file)
 
 decoder.o: src\decoder.cpp
 	$(CC) -c src\decoder.cpp
