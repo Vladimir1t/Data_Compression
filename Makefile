@@ -9,9 +9,11 @@ FLAGS = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equa
 	-Wwrite-strings -D_DEBUG -D_EJUDGE_CLIENT_SIDE
 
 library      = text_files\library.txt
-sourse_file  = text_files\text_1.txt
-encoded_file = text_files\file_encoded_1.txt
-decoded_file = text_files\file_decoded_1.txt
+
+#    write a name of input file
+sourse_file  = text_files\text_5.txt
+encoded_file = text_files\file_encoded.txt
+decoded_file = text_files\file_decoded.txt
 
 compress: data_compression
 	data_compression.exe $(library) $(sourse_file) $(encoded_file)
