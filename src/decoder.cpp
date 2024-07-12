@@ -14,7 +14,7 @@ int main (int argc, char* argv[])
 
     FOPEN (library_file, argv[1], "r");
     FOPEN (sourse_file, argv[2], "rb");
-    FOPEN (result_file, argv[3], "wb");//
+    FOPEN (result_file, argv[3], "wb");
 
     read_library_file (library_file, &library);
 
