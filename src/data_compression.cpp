@@ -2,11 +2,9 @@
 
 static FILE* error_file = fopen ("log\\file_error.txt", "w");
 
-static int compressed_data_output (FILE* result_file, struct Buffer* buffer, size_t string_size);
-
-static int get_data (FILE* sourse_file, char** data);
-
-static void print_library (struct Library* library);
+static int  compressed_data_output (FILE* result_file, struct Buffer* buffer, size_t string_size);
+static int  get_data               (FILE* sourse_file, char** data);
+static void print_library          (struct Library* library);
 
 int main (int argc, char* argv[])
 {
@@ -26,10 +24,10 @@ int main (int argc, char* argv[])
 
     data_size = get_data (sourse_file, &data);
 
-    compress_data (data, &buffer/*&buffer, &buffer_size*/, &library);
+    compress_data (data, &buffer, &library);
 
     printf ("New size of library = %d\n", library.size);
-    compressed_data_output (result_file, &buffer/*buffer, buffer_size*/, data_size);
+    compressed_data_output (result_file, &buffer, data_size);
 
     fclose (error_file);
     fclose (library_file);
@@ -116,7 +114,6 @@ int compress_data (char* string, struct Buffer* buffer, struct Library* library)
         num  = 0xDEAD;
         flag = 1;
         j    = 0;
-
         char new_library_word[MAX_WORD_SIZE] = {0};
         char word[MAX_WORD_SIZE] = {0};
         new_library_word[j] = string[ptr];
