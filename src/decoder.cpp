@@ -1,6 +1,6 @@
-#include "..\include\data_compression.h"
+#include "../include/data_compression.h"
 
-static FILE* error_file = fopen ("log\\file_error_decoder.txt", "w");
+static FILE* error_file = fopen ("log/file_error_decoder.txt", "w");
 
 static void print_library (struct Library* library);
 
@@ -35,8 +35,8 @@ int read_library_file (FILE* library_file, struct Library* library)
     CHECK_PTR (library_file);
     CHECK_PTR (library);
 
-    library->capacity  = 30;
-    library->size      = 0;
+    library->capacity = 30;
+    library->size     = 0;
 
     char* text_data = NULL;
     CALLOC (library->lib_words, struct Library_word, library->capacity);
@@ -73,21 +73,21 @@ int read_library_file (FILE* library_file, struct Library* library)
     return SUCCESS;
 }
 
-int decode_data (FILE* sourse_file, struct Library* library, struct Buffer* buffer/*unsigned char** buffer, size_t* buffer_size*/)
+int decode_data (FILE* sourse_file, struct Library* library, struct Buffer* buffer)
 {
     CHECK_PTR (sourse_file);
     CHECK_PTR (library);
     CHECK_PTR (buffer);
 
     char* text_data = NULL;
-    size_t file_size = file_size_measure (sourse_file);            // measures the size of a text
+    size_t file_size = file_size_measure (sourse_file);        
     CALLOC (text_data, char, file_size + 1);
     size_t factual_size = fread (text_data, sizeof (char), file_size, sourse_file);
 
     buffer->capacity = 1000;
     CALLOC (buffer->data, unsigned char, buffer->capacity);
 
-    int ptr = 0;
+    int ptr  = 0;
     int flag = 1;
 
     unsigned short num = 0xDEAD;
@@ -101,7 +101,7 @@ int decode_data (FILE* sourse_file, struct Library* library, struct Buffer* buff
         if (buffer->size + MAX_WORD_SIZE > buffer->capacity)
             INCREASE_BUFFER_CAPACITY (buffer);
 
-        if (num <= library->size)                                // add a decoded word in buffer
+        if (num <= library->size)                               
         {
             strcat ((char*) buffer->data, library->lib_words[num].name);
             buffer->size += strlen (library->lib_words[num].name);
