@@ -1,6 +1,6 @@
-#include "..\include\data_compression.h"
+#include "../include/data_compression.h"
 
-static FILE* error_file = fopen ("log\\file_error.txt", "w");
+static FILE* error_file = fopen ("log/file_error.txt", "w");
 
 static int  compressed_data_output (FILE* result_file, struct Buffer* buffer, size_t string_size);
 static int  get_data               (FILE* sourse_file, char** data);
